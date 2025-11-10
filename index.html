@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarberShop - Reserva tu Turno</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="container">
+        <header>
+            <h1>💈 BARBERSHOP 💈</h1>
+            <div class="flag-colors">
+                <div class="yellow"></div>
+                <div class="blue"></div>
+                <div class="red"></div>
+            </div>
+            <p>¡EL MEJOR CORTE, EL MEJOR ESTILO!</p>
+        </header>
+
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600" alt="Corte moderno">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Cortes Modernos</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600" alt="Arreglo de barba">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Barba Profesional</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600" alt="Estilo clásico">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Estilo Clásico</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600" alt="Fade">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Fade & Diseños</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>🎯 NUESTROS SERVICIOS</h2>
+                <div class="services">
+                    <div class="service-item" data-service="corte" data-price="25000">
+                        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=200&h=200&fit=crop" alt="Corte" class="service-img">
+                        <div class="service-info">
+                            <div class="service-name">Corte de Cabello</div>
+                            <div class="service-desc">Corte personalizado con estilo</div>
+                        </div>
+                        <div class="service-price">$25.000</div>
+                    </div>
+
+                    <div class="service-item" data-service="barba" data-price="18000">
+                        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=200&h=200&fit=crop" alt="Barba" class="service-img">
+                        <div class="service-info">
+                            <div class="service-name">Arreglo de Barba</div>
+                            <div class="service-desc">Perfilado y diseño profesional</div>
+                        </div>
+                        <div class="service-price">$18.000</div>
+                    </div>
+
+                    <div class="service-item" data-service="combo" data-price="38000">
+                        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=200&h=200&fit=crop" alt="Combo" class="service-img">
+                        <div class="service-info">
+                            <div class="service-name">Combo Completo</div>
+                            <div class="service-desc">Corte + Barba + Cejas</div>
+                        </div>
+                        <div class="service-price">$38.000</div>
+                    </div>
+
+                    <div class="service-item" data-service="cejas" data-price="8000">
+                        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&h=200&fit=crop" alt="Cejas" class="service-img">
+                        <div class="service-info">
+                            <div class="service-name">Cejas</div>
+                            <div class="service-desc">Perfilado de cejas</div>
+                        </div>
+                        <div class="service-price">$8.000</div>
+                    </div>
+
+                    <div class="service-item" data-service="tintura" data-price="35000">
+                        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=200&h=200&fit=crop" alt="Tintura" class="service-img">
+                        <div class="service-info">
+                            <div class="service-name">Tintura/Color</div>
+                            <div class="service-desc">Aplicación de color profesional</div>
+                        </div>
+                        <div class="service-price">$35.000</div>
+                    </div>
+
+                    <div class="service-item" data-service="kids" data-price="20000">
+                        <img src="https://images.unsplash.com/photo-1581349485608-9469926a8e5e?w=200&h=200&fit=crop" alt="Niños" class="service-img">
+                        <div class="service-info">
+                            <div class="service-name">Corte Infantil</div>
+                            <div class="service-desc">Especial para niños</div>
+                        </div>
+                        <div class="service-price">$20.000</div>
+                    </div>
+                </div>
+
+                <div class="summary">
+                    <h3>RESUMEN</h3>
+                    <div id="selectedServices">
+                        <p style="color: #999;">No has seleccionado servicios</p>
+                    </div>
+                    <div class="summary-item">
+                        <span>TOTAL:</span>
+                        <span id="totalPrice">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📅 RESERVA TU TURNO</h2>
+                <form id="reservaForm">
+                    <div class="form-group">
+                        <label for="nombre">👤 Nombre Completo *</label>
+                        <input type="text" id="nombre" required placeholder="Juan Pérez">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">📱 Teléfono *</label>
+                        <input type="tel" id="telefono" required placeholder="300 123 4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">📧 Correo Electrónico</label>
+                        <input type="email" id="email" placeholder="ejemplo@correo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha">📅 Fecha *</label>
+                        <input type="date" id="fecha" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>⏰ Hora Disponible *</label>
+                        <div class="time-slots" id="timeSlots">
+                            <div class="time-slot" data-time="09:00">09:00 AM</div>
+                            <div class="time-slot" data-time="10:00">10:00 AM</div>
+                            <div class="time-slot" data-time="11:00">11:00 AM</div>
+                            <div class="time-slot" data-time="14:00">02:00 PM</div>
+                            <div class="time-slot" data-time="15:00">03:00 PM</div>
+                            <div class="time-slot" data-time="16:00">04:00 PM</div>
+                            <div class="time-slot" data-time="17:00">05:00 PM</div>
+                            <div class="time-slot" data-time="18:00">06:00 PM</div>
+                            <div class="time-slot" data-time="19:00">07:00 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudad">🏙️ Ciudad *</label>
+                        <select id="ciudad" required>
+                            <option value="">Selecciona tu ciudad</option>
+                            <option value="Bogotá">Bogotá</option>
+                            <option value="Medellín">Medellín</option>
+                            <option value="Cali">Cali</option>
+                            <option value="Barranquilla">Barranquilla</option>
+                            <option value="Cartagena">Cartagena</option>
+                            <option value="Bucaramanga">Bucaramanga</option>
+                            <option value="Pereira">Pereira</option>
+                            <option value="Manizales">Manizales</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentarios">💬 Comentarios Adicionales</label>
+                        <textarea id="comentarios" rows="3" placeholder="¿Algún estilo específico que desees?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">CONFIRMAR RESERVA 🚀</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="reservations-section">
+            <h2>📋 RESERVAS REGISTRADAS</h2>
+            <div id="reservationsList">
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 40px;">
+                    No hay reservas registradas aún. ¡Sé el primero en reservar!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✅</div>
+            <h2>¡RESERVA CONFIRMADA!</h2>
+            <p>Tu turno ha sido agendado exitosamente.</p>
+            <p>Recibirás un mensaje de confirmación pronto.</p>
+            <button class="btn-close" onclick="closeModal()">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
