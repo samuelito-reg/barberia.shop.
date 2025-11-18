@@ -3,204 +3,708 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BarberShop - Reserva tu Turno</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>BarberShop - Iniciar Sesión</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FCD116 0%, #CE1126 50%, #003893 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            border: 2px solid rgba(252, 209, 22, 0.3);
+            box-shadow: 0 20px 60px rgba(252, 209, 22, 0.2);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #FCD116 0%, #CE1126 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .flag-colors {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .flag-colors div {
+            width: 60px;
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .yellow { background: #FCD116; }
+        .blue { background: #003893; }
+        .red { background: #CE1126; }
+
+        .logo p {
+            font-size: 0.9em;
+            color: #FCD116;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, rgba(252, 209, 22, 0.3), rgba(206, 17, 38, 0.3));
+            border-color: #FCD116;
+            color: #FCD116;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #FCD116;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FCD116;
+            background: rgba(252, 209, 22, 0.05);
+            box-shadow: 0 0 20px rgba(252, 209, 22, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #FCD116 0%, #CE1126 100%);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(252, 209, 22, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(206, 17, 38, 0.2);
+            border: 1px solid #CE1126;
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9em;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #FCD116;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #0a0a0a;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(252, 209, 22, 0.3);
+        }
+
+        .user-info h2 {
+            color: #FCD116;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+
+        .btn-logout {
+            padding: 10px 25px;
+            background: rgba(206, 17, 38, 0.3);
+            border: 2px solid #CE1126;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover {
+            background: #CE1126;
+            transform: translateY(-2px);
+        }
+
+        .btn-go-booking {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #003893, #0056d6);
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 40px 25px;
+            }
+
+            .logo h1 {
+                font-size: 2.5em;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="animated-bg"></div>
-    
+
     <div class="container">
-        <header>
-            <h1>💈 BARBERSHOP 💈</h1>
-            <div class="flag-colors">
-                <div class="yellow"></div>
-                <div class="blue"></div>
-                <div class="red"></div>
-            </div>
-            <p>¡EL MEJOR CORTE, EL MEJOR ESTILO!</p>
-        </header>
-
-        <div class="gallery">
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600" alt="Corte moderno">
-                <div class="gallery-overlay">
-                    <div class="gallery-title">Cortes Modernos</div>
+        <!-- Formularios de Auth -->
+        <div id="authForms" class="auth-card">
+            <div class="logo">
+                <h1>💈 BARBERSHOP</h1>
+                <div class="flag-colors">
+                    <div class="yellow"></div>
+                    <div class="blue"></div>
+                    <div class="red"></div>
                 </div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600" alt="Arreglo de barba">
-                <div class="gallery-overlay">
-                    <div class="gallery-title">Barba Profesional</div>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600" alt="Estilo clásico">
-                <div class="gallery-overlay">
-                    <div class="gallery-title">Estilo Clásico</div>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600" alt="Fade">
-                <div class="gallery-overlay">
-                    <div class="gallery-title">Fade & Diseños</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <div class="card">
-                <h2>🎯 NUESTROS SERVICIOS</h2>
-                <div class="services">
-                    <div class="service-item" data-service="corte" data-price="25000">
-                        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=200&h=200&fit=crop" alt="Corte" class="service-img">
-                        <div class="service-info">
-                            <div class="service-name">Corte de Cabello</div>
-                            <div class="service-desc">Corte personalizado con estilo</div>
-                        </div>
-                        <div class="service-price">$25.000</div>
-                    </div>
-
-                    <div class="service-item" data-service="barba" data-price="18000">
-                        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=200&h=200&fit=crop" alt="Barba" class="service-img">
-                        <div class="service-info">
-                            <div class="service-name">Arreglo de Barba</div>
-                            <div class="service-desc">Perfilado y diseño profesional</div>
-                        </div>
-                        <div class="service-price">$18.000</div>
-                    </div>
-
-                    <div class="service-item" data-service="combo" data-price="38000">
-                        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=200&h=200&fit=crop" alt="Combo" class="service-img">
-                        <div class="service-info">
-                            <div class="service-name">Combo Completo</div>
-                            <div class="service-desc">Corte + Barba + Cejas</div>
-                        </div>
-                        <div class="service-price">$38.000</div>
-                    </div>
-
-                    <div class="service-item" data-service="cejas" data-price="8000">
-                        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&h=200&fit=crop" alt="Cejas" class="service-img">
-                        <div class="service-info">
-                            <div class="service-name">Cejas</div>
-                            <div class="service-desc">Perfilado de cejas</div>
-                        </div>
-                        <div class="service-price">$8.000</div>
-                    </div>
-
-                    <div class="service-item" data-service="tintura" data-price="35000">
-                        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=200&h=200&fit=crop" alt="Tintura" class="service-img">
-                        <div class="service-info">
-                            <div class="service-name">Tintura/Color</div>
-                            <div class="service-desc">Aplicación de color profesional</div>
-                        </div>
-                        <div class="service-price">$35.000</div>
-                    </div>
-
-                    <div class="service-item" data-service="kids" data-price="20000">
-                        <img src="https://images.unsplash.com/photo-1581349485608-9469926a8e5e?w=200&h=200&fit=crop" alt="Niños" class="service-img">
-                        <div class="service-info">
-                            <div class="service-name">Corte Infantil</div>
-                            <div class="service-desc">Especial para niños</div>
-                        </div>
-                        <div class="service-price">$20.000</div>
-                    </div>
-                </div>
-
-                <div class="summary">
-                    <h3>RESUMEN</h3>
-                    <div id="selectedServices">
-                        <p style="color: #999;">No has seleccionado servicios</p>
-                    </div>
-                    <div class="summary-item">
-                        <span>TOTAL:</span>
-                        <span id="totalPrice">$0</span>
-                    </div>
-                </div>
+                <p>Tu cuenta personal</p>
             </div>
 
-            <div class="card">
-                <h2>📅 RESERVA TU TURNO</h2>
-                <form id="reservaForm">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Iniciar Sesión</div>
+                <div class="tab" onclick="switchTab('register')">Registrarse</div>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- Formulario de Login -->
+            <div id="loginForm" class="form-container active">
+                <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label for="nombre">👤 Nombre Completo *</label>
-                        <input type="text" id="nombre" required placeholder="Juan Pérez">
+                        <label>📧 Correo Electrónico</label>
+                        <input type="email" id="loginEmail" required placeholder="tu@correo.com">
                     </div>
 
                     <div class="form-group">
-                        <label for="telefono">📱 Teléfono *</label>
-                        <input type="tel" id="telefono" required placeholder="300 123 4567">
+                        <label>🔒 Contraseña</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+
+                    <button type="submit" class="btn" id="loginBtn">Iniciar Sesión</button>
+
+                    <div class="forgot-password">
+                        <a href="#" onclick="showForgotPassword(event)">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <div id="registerForm" class="form-container">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>👤 Nombre Completo</label>
+                        <input type="text" id="registerName" required placeholder="Juan Pérez">
                     </div>
 
                     <div class="form-group">
-                        <label for="email">📧 Correo Electrónico</label>
-                        <input type="email" id="email" placeholder="ejemplo@correo.com">
+                        <label>📱 Teléfono</label>
+                        <input type="tel" id="registerPhone" required placeholder="300 123 4567">
                     </div>
 
                     <div class="form-group">
-                        <label for="fecha">📅 Fecha *</label>
-                        <input type="date" id="fecha" required>
+                        <label>📧 Correo Electrónico</label>
+                        <input type="email" id="registerEmail" required placeholder="tu@correo.com">
                     </div>
 
                     <div class="form-group">
-                        <label>⏰ Hora Disponible *</label>
-                        <div class="time-slots" id="timeSlots">
-                            <div class="time-slot" data-time="09:00">09:00 AM</div>
-                            <div class="time-slot" data-time="10:00">10:00 AM</div>
-                            <div class="time-slot" data-time="11:00">11:00 AM</div>
-                            <div class="time-slot" data-time="14:00">02:00 PM</div>
-                            <div class="time-slot" data-time="15:00">03:00 PM</div>
-                            <div class="time-slot" data-time="16:00">04:00 PM</div>
-                            <div class="time-slot" data-time="17:00">05:00 PM</div>
-                            <div class="time-slot" data-time="18:00">06:00 PM</div>
-                            <div class="time-slot" data-time="19:00">07:00 PM</div>
-                        </div>
+                        <label>🔒 Contraseña</label>
+                        <input type="password" id="registerPassword" required placeholder="••••••••" minlength="6">
                     </div>
 
                     <div class="form-group">
-                        <label for="ciudad">🏙️ Ciudad *</label>
-                        <select id="ciudad" required>
-                            <option value="">Selecciona tu ciudad</option>
-                            <option value="Bogotá">Bogotá</option>
-                            <option value="Medellín">Medellín</option>
-                            <option value="Cali">Cali</option>
-                            <option value="Barranquilla">Barranquilla</option>
-                            <option value="Cartagena">Cartagena</option>
-                            <option value="Bucaramanga">Bucaramanga</option>
-                            <option value="Pereira">Pereira</option>
-                            <option value="Manizales">Manizales</option>
-                        </select>
+                        <label>🔒 Confirmar Contraseña</label>
+                        <input type="password" id="registerConfirmPassword" required placeholder="••••••••" minlength="6">
                     </div>
 
-                    <div class="form-group">
-                        <label for="comentarios">💬 Comentarios Adicionales</label>
-                        <textarea id="comentarios" rows="3" placeholder="¿Algún estilo específico que desees?"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-submit">CONFIRMAR RESERVA 🚀</button>
+                    <button type="submit" class="btn" id="registerBtn">Crear Cuenta</button>
                 </form>
             </div>
         </div>
 
-        <div class="reservations-section">
-            <h2>📋 RESERVAS REGISTRADAS</h2>
-            <div id="reservationsList">
-                <p style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 40px;">
-                    No hay reservas registradas aún. ¡Sé el primero en reservar!
+        <!-- Dashboard del Usuario -->
+        <div id="userDashboard" class="auth-card dashboard">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <h2 id="userName">¡Bienvenido!</h2>
+                    <p id="userEmail"></p>
+                </div>
+                <button class="btn-logout" onclick="handleLogout()">Cerrar Sesión</button>
+            </div>
+
+            <div style="text-align: center; padding: 40px 20px;">
+                <div style="font-size: 4em; margin-bottom: 20px;">✅</div>
+                <h3 style="color: #FCD116; margin-bottom: 15px;">¡Sesión Iniciada!</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 30px;">
+                    Tu cuenta está activa y lista para usar.
                 </p>
+                <button class="btn btn-go-booking" onclick="goToBooking()">
+                     <a href="https://www.q10.com/Colombia">Ir a Reservar Turno 🚀</a>
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <div class="success-icon">✅</div>
-            <h2>¡RESERVA CONFIRMADA!</h2>
-            <p>Tu turno ha sido agendado exitosamente.</p>
-            <p>Recibirás un mensaje de confirmación pronto.</p>
-            <button class="btn-close" onclick="closeModal()">ENTENDIDO</button>
-        </div>
-    </div>
+    <script>
+        // ⚠️ IMPORTANTE: Reemplaza estos valores con tus credenciales de Supabase
+                const SUPABASE_URL = 'https://fmbmarulvbcybhdadrua.supabase.co';
+                const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYm1hcnVsdmJjeWJoZGFkcnVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5MzkyNTEsImV4cCI6MjA3ODUxNTI1MX0.w9UV0nVDi6rAaDZQpzqNvBnyi7yqdmBN8JjXJ59AMD8';
 
-    <script src="script.js"></script>
+        // Inicializar Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Verificar sesión al cargar
+        checkSession();
+
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                showDashboard(session.user);
+            }
+        }
+
+        function switchTab(tab) {
+            // Cambiar tabs activas
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Mostrar formulario correcto
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + 'Form').classList.add('active');
+
+            // Limpiar mensajes
+            hideMessages();
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>Iniciando sesión...';
+            hideMessages();
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                showSuccess('¡Inicio de sesión exitoso!');
+                setTimeout(() => {
+                    showDashboard(data.user);
+                }, 1000);
+
+            } catch (error) {
+                showError(error.message || 'Error al iniciar sesión');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Iniciar Sesión';
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const phone = document.getElementById('registerPhone').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const btn = document.getElementById('registerBtn');
+
+            // Validar contraseñas
+            if (password !== confirmPassword) {
+                showError('Las contraseñas no coinciden');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>Creando cuenta...';
+            hideMessages();
+
+            try {
+                // Registrar usuario
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            phone: phone
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                // Actualizar perfil
+                if (data.user) {
+                    await supabase
+                        .from('profiles')
+                        .update({ 
+                            full_name: name, 
+                            phone: phone 
+                        })
+                        .eq('id', data.user.id);
+                }
+
+                showSuccess('¡Cuenta creada exitosamente! Revisa tu correo para confirmar.');
+                
+                // Limpiar formulario
+                document.getElementById('registerForm').querySelector('form').reset();
+                
+                // Cambiar a login después de 2 segundos
+                setTimeout(() => {
+                    switchTab('login');
+                    document.querySelector('.tab').click();
+                }, 2000);
+
+            } catch (error) {
+                showError(error.message || 'Error al crear la cuenta');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Crear Cuenta';
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+
+                // Mostrar formularios de auth
+                document.getElementById('authForms').style.display = 'block';
+                document.getElementById('userDashboard').classList.remove('active');
+                
+                showSuccess('Sesión cerrada exitosamente');
+
+            } catch (error) {
+                showError('Error al cerrar sesión');
+            }
+        }
+
+        function showDashboard(user) {
+            document.getElementById('authForms').style.display = 'none';
+            document.getElementById('userDashboard').classList.add('active');
+            
+            document.getElementById('userName').textContent = `¡Hola, ${user.user_metadata?.full_name || 'Usuario'}!`;
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+        }
+
+        function showForgotPassword(event) {
+            event.preventDefault();
+            const email = prompt('Ingresa tu correo electrónico para recuperar tu contraseña:');
+            
+            if (email) {
+                supabase.auth.resetPasswordForEmail(email)
+                    .then(({ error }) => {
+                        if (error) {
+                            showError('Error al enviar correo de recuperación');
+                        } else {
+                            showSuccess('Se ha enviado un correo para recuperar tu contraseña');
+                        }
+                    });
+            }
+        }
+
+        function goToBooking() {
+            // Aquí deberías redirigir a tu página de reservas
+            // Por ahora solo mostraremos un mensaje
+        
+            // window.location.href = 'index.html';
+        }
+
+        // Escuchar cambios en el estado de autenticación
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                showDashboard(session.user);
+            } else if (event === 'SIGNED_OUT') {
+                document.getElementById('authForms').style.display = 'block';
+                document.getElementById('userDashboard').classList.remove('active');
+
+
+                    // Conexión a Supabase
+    const supabaseUrl = "https://fmbmarulvbcybhdadrua.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYm1hcnVsdmJjeWJoZGFkcnVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5MzkyNTEsImV4cCI6MjA3ODUxNTI1MX0.w9UV0nVDi6rAaDZQpzqNvBnyi7yqdmBN8JjXJ59AMD8";
+
+    const supabase = supabasejs.createClient(supabaseUrl, supabaseKey);
+
+    // 📌 Insertar cliente
+    document.getElementById("clienteForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value;
+        const correo = document.getElementById("correo").value;
+        const telefono = document.getElementById("telefono").value;
+        const mensaje = document.getElementById("mensaje").value;
+
+        const { data, error } = await supabase
+            .from("clientes")
+            .insert([{ nombre, correo, telefono, mensaje }]);
+
+        if (error) {
+            alert("Error al guardar: " + error.message);
+            return;
+        }
+
+        alert("Cliente guardado correctamente");
+        e.target.reset();
+        cargarClientes();
+    });
+
+    // 📌 Leer clientes
+    async function cargarClientes() {
+        const { data, error } = await supabase
+            .from("clientes")
+            .select("*")
+            .order("id", { ascending: false });
+
+        if (error) {
+            document.getElementById("output").textContent = "Error: " + error.message;
+        } else {
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        }
+    }
+
+    // Cargar lista al abrir la página
+    cargarClientes()
+
+
+
+
+
+            }
+        });
+
+    </script>
 </body>
 </html>
